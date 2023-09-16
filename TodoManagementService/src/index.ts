@@ -1,11 +1,13 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Todo from './todo-model';
+import { kProducer } from './config/producer';
 
 const app = express();
 
 app.use(express.json());
 
+//* API's
 app.get('/todos', async (req: Request, res: Response) => {
   const result = await Todo.find({});
   res.send(result);
@@ -19,6 +21,8 @@ app.post('/todos', async (req: Request, res: Response) => {
   }
 
   const todo = await Todo.create({ title, description, todoId });
+
+  kProducer(title, description, todoId);
 
   res.send(todo);
 });
@@ -47,6 +51,7 @@ app.put('/todos', async (req: Request, res: Response) => {
   res.send(todo);
 });
 
+//* start server
 const start = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI!);

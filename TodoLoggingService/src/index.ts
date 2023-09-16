@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
+import { consumer } from './config/consumer';
 
 const app = express();
 
@@ -14,6 +15,7 @@ const start = async () => {
   }
   app.listen(4001, () => {
     console.log('Listening on port 4001!');
+    consumer();
   });
 };
 
