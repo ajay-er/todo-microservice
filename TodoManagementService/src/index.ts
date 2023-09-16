@@ -49,7 +49,7 @@ app.put('/todos', async (req: Request, res: Response) => {
 
 const start = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27017/todo');
+    await mongoose.connect(process.env.MONGO_URI!);
     console.log('Connected To MongoDB');
   } catch (error) {
     console.log(error);

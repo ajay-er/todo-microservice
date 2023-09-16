@@ -1,1 +1,38 @@
-
+version: '3'
+services:
+  todo-service:
+    build: 
+      dockerfile: Dockerfile
+      context: ./TodoManagementService
+    volumes:
+      - /app/node_modules
+      - ./TodoManagementService:/app
+    ports:
+      - '4000:4000'
+    environment:
+      - MONGO_URI=mongodb://todo-db:27017/tododb
+    depends_on:
+      - todo-db
+  logger-service:
+    build: 
+      dockerfile: Dockerfile
+      context: ./TodoLoggingService
+    volumes:
+      - /app/node_modules
+      - ./TodoLoggingService:/app
+    ports:
+      - '4001:4001'
+    environment:
+      - MONGO_URI=mongodb://logger-db:27018/todologger
+    depends_on:
+      - logger-db
+  todo-db:
+    image: mongo:latest
+    container_name: todo-db
+    ports:
+      - '27017:27017'
+  logger-db:
+    image: mongo:latest
+    container_name: logger-db
+    ports:
+      - '27018:27017'
