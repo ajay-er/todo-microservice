@@ -27,6 +27,7 @@ services:
       - MONGO_URI=mongodb://todo-db:27017/tododb
     depends_on:
       - todo-db
+      - kafka
   logger-service:
     build:
       dockerfile: Dockerfile
@@ -40,6 +41,7 @@ services:
       - MONGO_URI=mongodb://logger-db:27019/todologger
     depends_on:
       - logger-db
+      - kafka
   todo-db:
     image: mongo:latest
     container_name: todo-db
