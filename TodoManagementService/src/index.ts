@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import Todo from './todo-model';
+import Todo from './model/todo-model';
 import { kProducer } from './config/producer';
+import { randomBytes } from 'crypto';
 
 const app = express();
 
@@ -14,15 +15,17 @@ app.get('/todos', async (req: Request, res: Response) => {
 });
 
 app.post('/todos', async (req: Request, res: Response) => {
-  const { title, description, todoId } = req.body;
+  const { title, description } = req.body;
 
-  if (!title || !description || !todoId) {
+  if (!title || !description) {
     return res.status(400).send('Please provide all todo information.');
   }
 
+  const todoId = randomBytes(4).toString('hex');
+
   const todo = await Todo.create({ title, description, todoId });
 
-  kProducer(title, description, todoId);
+  kProducer(title, description, todo.todoId, 'Todo-Created');
 
   res.send(todo);
 });
@@ -48,6 +51,8 @@ app.put('/todos', async (req: Request, res: Response) => {
   }
 
   await todo.save();
+
+  kProducer(title, description, todoId, 'Todo-Updated');
   res.send(todo);
 });
 

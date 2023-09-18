@@ -3,7 +3,8 @@ const { kafka } = require('./client');
 export async function kProducer(
   description: string,
   title: string,
-  todoId: string
+  todoId: string,
+  topic: string
 ) {
   const producer = kafka.producer();
 
@@ -12,7 +13,7 @@ export async function kProducer(
   console.log('Producer connected success');
 
   const result = await producer.send({
-    topic: 'Todo-Created',
+    topic: topic,
     messages: [
       {
         partition: 0,
@@ -26,8 +27,8 @@ export async function kProducer(
     ],
   });
 
-  console.log(result,'😁😁kafka result here😁😁');
-  
+  console.log(result, '😁😁kafka result here😁😁');
+
   console.log('Producer disconnecting...');
   producer.disconnect();
 }
