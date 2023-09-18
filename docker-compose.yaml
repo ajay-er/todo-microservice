@@ -37,19 +37,10 @@ services:
       - ./TodoLoggingService:/app
     ports:
       - '4001:4001'
-    environment:
-      - MONGO_URI=mongodb://logger-db:27019/todologger
     depends_on:
-      - logger-db
       - kafka
   todo-db:
     image: mongo:latest
     container_name: todo-db
     ports:
       - '27017:27017'
-  logger-db:
-    image: mongo:latest
-    command: mongod --port 27019
-    container_name: logger-db
-    ports:
-      - '27019:27019'
