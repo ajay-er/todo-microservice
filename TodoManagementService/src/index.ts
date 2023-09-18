@@ -11,49 +11,45 @@ app.use(express.json());
 //* API's
 app.get('/todos', async (req: Request, res: Response) => {
   const result = await Todo.find({});
-  res.send(result);
+  res.json(result);
 });
 
 app.post('/todos', async (req: Request, res: Response) => {
-  const { title, description } = req.body;
+  const { title } = req.body;
 
-  if (!title || !description) {
+  if (!title) {
     return res.status(400).send('Please provide all todo information.');
   }
 
   const todoId = randomBytes(4).toString('hex');
 
-  const todo = await Todo.create({ title, description, todoId });
+  const todo = await Todo.create({ title, todoId });
 
-  kProducer(title, description, todo.todoId, 'Todo-Created');
+  kProducer(title, todo.todoId, 'Todo-Created');
 
-  res.send(todo);
+  res.json(todo);
 });
 
 app.put('/todos', async (req: Request, res: Response) => {
-  const { title, description, todoId, completed } = req.body;
-  const todo = await Todo.findOne({ todoId: todoId });
+  const { todoId, completed, title } = req.body;
+  const todo = await Todo.updateOne(
+    { todoId: todoId },
+    { completed: completed }
+  );
+
+  kProducer(title, todoId, 'Todo-Updated');
+  res.json(todo);
+});
+
+app.delete('/todos/:id', async (req: Request, res: Response) => {
+  const todoId = req.params.id;
+  const todo = await Todo.deleteOne({ todoId: todoId });
 
   if (!todo) {
     return res.status(404).send('Todo not found!');
   }
 
-  if (title) {
-    todo.title = title;
-  }
-
-  if (description) {
-    todo.description = description;
-  }
-
-  if (completed !== undefined) {
-    todo.completed = completed;
-  }
-
-  await todo.save();
-
-  kProducer(title, description, todoId, 'Todo-Updated');
-  res.send(todo);
+  res.send('OK');
 });
 
 //* start server
