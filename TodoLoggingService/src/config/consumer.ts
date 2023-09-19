@@ -13,7 +13,7 @@ export async function consumer() {
       try {
         const decodedMessage = JSON.parse(message.value?.toString() || '');
         console.log(`[${topic}]: PART:${partition}:`, decodedMessage);
-        logger.info(topic, decodedMessage);
+        logger.info(topic,decodedMessage);
       } catch (error) {
         console.error('Error decoding message:', error);
       }

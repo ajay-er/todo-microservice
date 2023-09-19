@@ -6,26 +6,27 @@ import { HttpClient } from '@angular/common/http';
 })
 export class TodoService {
   constructor(private http: HttpClient) {}
+  baseUrl: string = 'http://localhost:4000';
 
-  getAllTodos(){
-    return this.http.get('/api/todos');
+  getAllTodos() {
+    return this.http.get(`${this.baseUrl}/todos`);
   }
 
   addTodo(title: string) {
-    return this.http.post('/api/todos',{
-      title:title
+    return this.http.post(`${this.baseUrl}/todos`, {
+      title: title,
     });
   }
 
-  updateTodoStatus(title:string,id: string, newStatus: boolean) {
-    return this.http.post('/api/todos',{
-      todoId:id,
-      completed:newStatus,
-      title:title
+  updateTodoStatus(title: string, id: string, newStatus: boolean) {
+    return this.http.put(`${this.baseUrl}/todos`, {
+      todoId: id,
+      completed: newStatus,
+      title: title,
     });
   }
 
   deleteTodo(id: string) {
-    return this.http.delete(`/api/todos/${id}`)
+    return this.http.delete(`${this.baseUrl}/todos/${id}`);
   }
 }

@@ -3,8 +3,8 @@ const { kafka } = require('./client');
 export async function kProducer(
   title: string,
   todoId: string,
+  completed:boolean,
   topic: string,
-  
 ) {
   const producer = kafka.producer();
 
@@ -21,6 +21,7 @@ export async function kProducer(
         value: JSON.stringify({
           title: title,
           todoId: todoId,
+          completed:completed
         }),
       },
     ],

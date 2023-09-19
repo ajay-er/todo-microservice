@@ -14,6 +14,17 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+  client:
+    build:
+      dockerfile: Dockerfile
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+    ports:
+      - '5000:4200'
+    depends_on:
+      - todo-service
   todo-service:
     build:
       dockerfile: Dockerfile
